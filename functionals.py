@@ -53,9 +53,23 @@ class Functional_conf(game_conf.Game_interaction):
         if self.nick_ent.get() == '':
             self.nickname = 'UNKNOWN'
         else:
-            self.nickname = self.nick_ent.get()
+            if len(self.nick_ent.get()) <= 12:
+                self.nickname = self.nick_ent.get()
+            else:
+                self.send_warning_nick()
+                self.nickname = ''
+
+    def enter_game_btt(self):
+        self.enter_game('')
 
     def enter_game(self, event):
+        self.unbind('<Return>')
         self.__save_nickname()
-        self.set_game_ui()
-        self.starting_dialogue()
+        if self.nickname != '':
+            self.set_game_ui()
+            if not self.introduced:
+                self.starting_dialogue()
+            else:
+                self.activate_game()
+
+
